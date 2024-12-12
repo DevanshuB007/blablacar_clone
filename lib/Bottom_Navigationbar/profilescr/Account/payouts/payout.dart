@@ -40,15 +40,25 @@ class _PayoutState extends State<Payout> {
               "you don't have any payouts yet. Complete a ride as a driver with a passenger first.",
             ),
             SizedBox(
-              height: 20,
+              height: 90,
             ),
-            ListTile(
-              leading: Icon(Icons.add_circle_outline),
-              title: Text("add my information"),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Addinfo()));
-              },
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.blue,
+              ),
+              padding: EdgeInsets.all(1),
+              child: ListTile(
+                leading: Icon(Icons.add_circle_outline),
+                title: Text(
+                  "add my information",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Addinfo()));
+                },
+              ),
             )
           ],
         ),
