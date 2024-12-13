@@ -17,8 +17,6 @@ class _TodaydateState extends State<Todaydate> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(
             Icons.close,

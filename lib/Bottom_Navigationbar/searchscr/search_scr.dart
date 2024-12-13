@@ -1,5 +1,6 @@
 import 'package:blablacar/Bottom_Navigationbar/searchscr/goingto.dart';
 import 'package:blablacar/Bottom_Navigationbar/searchscr/leavingfrom.dart';
+import 'package:blablacar/Bottom_Navigationbar/searchscr/passanger.dart';
 import 'package:blablacar/Bottom_Navigationbar/searchscr/today.dart';
 import 'package:flutter/material.dart';
 
@@ -108,6 +109,10 @@ class _SearchScrState extends State<SearchScr> {
                             leading: const Icon(Icons.person),
                             title: const Text('1 passenger'),
                             onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Passanger()));
                               // Handle passenger count selection
                             },
                           ),
