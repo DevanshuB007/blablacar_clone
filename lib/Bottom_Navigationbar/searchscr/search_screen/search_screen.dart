@@ -1,5 +1,10 @@
 import 'package:blablacar/Bottom_Navigationbar/searchscr/create%20ride/id.dart';
+import 'package:blablacar/Bottom_Navigationbar/searchscr/goingto/goingto.dart';
+import 'package:blablacar/Bottom_Navigationbar/searchscr/leaving_from/leavingfrom.dart';
+import 'package:blablacar/Bottom_Navigationbar/searchscr/passanger.dart';
+import 'package:blablacar/Bottom_Navigationbar/searchscr/today.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
@@ -9,61 +14,183 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  void _showSearchModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (BuildContext context) {
-        final screenWidth = MediaQuery.of(context).size.width;
-        final screenHeight = MediaQuery.of(context).size.height;
+  DateTime? _selectedDate;
+  String selectedLocation = "Leaving From";
 
-        return Padding(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Container(
-            padding: EdgeInsets.all(screenWidth * 0.04),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Search Location',
-                  style: TextStyle(
-                    fontSize: screenWidth * 0.045,
-                    fontWeight: FontWeight.bold,
-                  ),
+  void updateLocation(String newLocation) {
+    setState(() {
+      selectedLocation = newLocation;
+    });
+  }
+
+  void _showSearchDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Search",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 500),
+      pageBuilder: (_, __, ___) {
+        final screenWidth = MediaQuery.of(context).size.width;
+        final screenheight = MediaQuery.of(context).size.height;
+
+        return Align(
+          alignment: Alignment.topCenter, // Align the dialog to the top
+          child: Material(
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(16),
+            ),
+            child: Container(
+              width: screenWidth,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(16),
                 ),
-                SizedBox(height: screenHeight * 0.02),
-                TextField(
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.grey.shade200,
-                    hintText: 'Enter the full location',
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: screenWidth * 0.04,
-                    ),
-                    prefixIcon: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back_ios_new),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.close,
+                      color: Colors.blue,
+                      size: 30,
                     ),
                   ),
-                  onChanged: (value) {
-                    print('User typed: $value');
-                  },
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      'Edit Your Search',
+                      style: const TextStyle(
+                          fontSize: 30, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 4,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      width: 350,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.circle_outlined),
+                            title: Text(
+                                selectedLocation), // Display the address here
+                            onTap: () async {
+                              final location = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Leavingfrom(),
+                                ),
+                              );
+                              if (location != null) {
+                                // If a location is selected, update the location
+                                updateLocation(location);
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.circle_outlined),
+                            title: const Text('Going to'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Goingto()));
+                              // Handle "Going to" action
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.calendar_month_outlined),
+                            title: Text(
+                              _selectedDate == null
+                                  ? 'Today'
+                                  : DateFormat('E d MMM')
+                                      .format(_selectedDate!),
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            onTap: () async {
+                              // Navigate to Todaydate and wait for the result
+                              DateTime? result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Todaydate()),
+                              );
+
+                              if (result != null) {
+                                setState(() {
+                                  _selectedDate =
+                                      result; // Update with selected date
+                                });
+                              }
+                            },
+                          ),
+                          const Divider(),
+                          ListTile(
+                            leading: const Icon(Icons.person),
+                            title: const Text('1 passenger'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Passanger()));
+                              // Handle passenger count selection
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue, // Button color
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => SearchScreen()));
+                                // Handle search action
+                              },
+                              child: const Text(
+                                'Search',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, -1), // Start from above the screen
+            end: Offset.zero,
+          ).animate(anim),
+          child: child,
         );
       },
     );
@@ -79,28 +206,34 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: GestureDetector(
-          onTap: () => _showSearchModal(context),
+          onTap: () => _showSearchDialog(context), // Opens the search modal
           child: TextField(
+            readOnly: true, // Makes the text field non-editable
+            onTap: () => _showSearchDialog(context), // Opens the search modal
             decoration: InputDecoration(
-              hintText: 'Search...',
+              hintText: 'Search',
               hintStyle: const TextStyle(color: Colors.grey),
               prefixIcon: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    print('Back button work');
-                  },
-                  icon: Icon(Icons.arrow_back_ios_new)),
+                onPressed: () {
+                  Navigator.pop(context);
+                  print('Back button work');
+                },
+                icon: const Icon(Icons.arrow_back_ios_new),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-              focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.transparent)),
+              // focusedBorder: OutlineInputBorder(
+              //   borderSide: const BorderSide(color: Colors.grey),
+              // ),
               contentPadding:
                   const EdgeInsets.symmetric(vertical: 16, horizontal: 15),
             ),
             style: const TextStyle(
-                color: Colors.black, fontSize: 16), // Text style
+              color: Colors.black,
+              fontSize: 16,
+            ), // Text style
           ),
         ),
       ),

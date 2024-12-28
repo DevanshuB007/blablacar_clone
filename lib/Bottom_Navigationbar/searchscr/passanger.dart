@@ -80,7 +80,10 @@ class _PassangerState extends State<Passanger> {
           // Add navigation or confirmation logic here
         },
         backgroundColor: Colors.blue,
-        child: const Icon(Icons.arrow_forward),
+        child: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.arrow_forward),
+        ),
       ),
     );
   }
