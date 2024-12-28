@@ -33,7 +33,7 @@ class _BottomScrState extends State<BottomScr> {
               setState(() {
                 currentIndexvalue = index;
               });
-            },
+            }, 
             selectedItemColor: const Color(0xFF0fa6e3),
             unselectedItemColor: const Color(0xFFa0a0a0),
             // showSelectedLabels: true,

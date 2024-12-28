@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
-class Goingto extends StatefulWidget {
-  const Goingto({super.key});
+class Leavingfrom extends StatefulWidget {
+  const Leavingfrom({super.key});
 
   @override
-  State<Goingto> createState() => _GoingtoState();
+  State<Leavingfrom> createState() => _LeavingfromState();
 }
 
-class _GoingtoState extends State<Goingto> {
+class _LeavingfromState extends State<Leavingfrom> {
   String currentLocation = "Fetching location...";
 
   // Function to get the current location
@@ -22,10 +23,11 @@ class _GoingtoState extends State<Goingto> {
       setState(() {
         currentLocation = "Location services are disabled.";
       });
+      print(currentLocation);
       return;
     }
 
-    // Request location permission
+    // Request location permissions
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -33,6 +35,7 @@ class _GoingtoState extends State<Goingto> {
         setState(() {
           currentLocation = "Location permissions are denied.";
         });
+        print(currentLocation);
         return;
       }
     }
@@ -42,17 +45,42 @@ class _GoingtoState extends State<Goingto> {
         currentLocation =
             "Location permissions are permanently denied, we cannot access location.";
       });
+      print(currentLocation);
       return;
     }
 
-    // Get the current position
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
+    // Get current position
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
 
-    setState(() {
-      currentLocation = "${position.latitude}, ${position.longitude}";
-    });
+      print("Latitude: ${position.latitude}, Longitude: ${position.longitude}");
+
+      // Convert coordinates to address
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      // Extract the first address from the list
+      Placemark place = placemarks[0];
+      String fullAddress =
+          "${place.street}, ${place.subLocality}, ${place.locality}, ${place.postalCode}, ${place.country}";
+
+      // Update the state with the full address
+      setState(() {
+        currentLocation = fullAddress;
+      });
+
+      // Print the full address
+      print("Current Address: $fullAddress");
+    } catch (e) {
+      print("Error: $e");
+      setState(() {
+        currentLocation = "Failed to get the address.";
+      });
+    }
   }
 
   // Function to show the location search modal
@@ -163,8 +191,9 @@ class _GoingtoState extends State<Goingto> {
                 title: const Text('Use Current Location'),
                 subtitle: Text(currentLocation),
                 onTap: () async {
-                  await _getCurrentLocation();
-                  Navigator.pop(context); // Close the modal
+                  await _getCurrentLocation(); // Fetch current location
+                  Navigator.pop(context,
+                      currentLocation); // Return the location to the previous page
                 },
               ),
             ],

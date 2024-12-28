@@ -29,7 +29,9 @@ class _PassangerState extends State<Passanger> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(
             Icons.close,
             color: Colors.blue,

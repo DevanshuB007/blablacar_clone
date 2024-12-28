@@ -24,7 +24,7 @@ class _TodaydateState extends State<Todaydate> {
             size: 30,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context); // Close the screen
           },
         ),
       ),
@@ -80,8 +80,7 @@ class _TodaydateState extends State<Todaydate> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Text(
-                          DateFormat.yMMMM()
-                              .format(firstDayOfMonth), // e.g., January 2025
+                          DateFormat.yMMMM().format(firstDayOfMonth),
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -98,16 +97,19 @@ class _TodaydateState extends State<Todaydate> {
                         focusedDay: firstDayOfMonth,
                         startingDayOfWeek: StartingDayOfWeek.sunday,
                         calendarFormat: CalendarFormat.month,
-                        headerVisible: false, // Hides the built-in header
-                        daysOfWeekVisible: false, // Uses custom weekday labels
+                        headerVisible: false,
+                        daysOfWeekVisible: false,
                         selectedDayPredicate: (day) {
                           return isSameDay(_selectedDay, day);
                         },
                         onDaySelected: (selectedDay, focusedDay) {
                           setState(() {
                             _selectedDay = selectedDay;
-                            _focusedDay = focusedDay; // Update focused day
+                            _focusedDay = focusedDay;
                           });
+
+                          // Send the selected date back
+                          Navigator.pop(context, selectedDay);
                         },
                         calendarStyle: const CalendarStyle(
                           defaultTextStyle: TextStyle(
@@ -121,7 +123,7 @@ class _TodaydateState extends State<Todaydate> {
                             color: Color(0xFF024550),
                             shape: BoxShape.circle,
                           ),
-                          outsideDaysVisible: false, // Hide other month days
+                          outsideDaysVisible: false,
                         ),
                       ),
                     ],

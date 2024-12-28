@@ -97,7 +97,7 @@ class _PublishScrState extends State<PublishScr> {
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none),
                   ),
-                  onChanged: (value) {
+                  onChanged: (value) {  
                     // Handle search query input
                   },
                 ),

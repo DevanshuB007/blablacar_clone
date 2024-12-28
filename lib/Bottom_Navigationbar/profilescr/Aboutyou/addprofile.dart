@@ -31,9 +31,16 @@ class _AddprofileState extends State<Addprofile> {
                 padding: const EdgeInsets.symmetric(horizontal: 90),
                 child: CircleAvatar(
                   radius: 100,
-                  child: Image.asset(
-                    'assets/images/girl.jpg',
-                    fit: BoxFit.cover,
+                  backgroundColor:
+                      Colors.transparent, // Optional: Set a background color
+                  child: ClipOval(
+                    child: Image.asset(
+                      'assets/images/girl.jpg',
+                      fit: BoxFit.cover, // Adjust image to cover the circle
+                      width:
+                          200, // Match the CircleAvatar diameter (2 * radius)
+                      height: 200,
+                    ),
                   ),
                 ),
               ),

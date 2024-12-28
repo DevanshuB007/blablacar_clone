@@ -12,6 +12,9 @@ class Rating extends StatefulWidget {
 class _RatingState extends State<Rating> {
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return DefaultTabController(
       length: 2, // Number of tabs
       child: Scaffold(
@@ -27,15 +30,19 @@ class _RatingState extends State<Rating> {
           ),
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              SizedBox(height: screenHeight * 0.02),
+              Text(
                 'Ratings',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: screenWidth * 0.07,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.02),
               // TabBar for navigation
               const TabBar(
                 indicatorSize: TabBarIndicatorSize.tab,
@@ -47,7 +54,7 @@ class _RatingState extends State<Rating> {
                   Tab(text: 'Given'),
                 ],
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: screenHeight * 0.02),
               // TabBarView for displaying content
               Expanded(
                 child: TabBarView(
