@@ -76,39 +76,39 @@ class _AboutyouState extends State<Aboutyou> {
 
   // Fetch vehicles from Appwrite database
   Future<void> _fetchVehicles() async {
-  print("🔄 Fetching all vehicles...");
-  
-  try {
-    final response = await _databases.listDocuments(
-      databaseId: AuthConfig.databaseId,
-      collectionId: AuthConfig.vehicalcollectionId, // Vehicles collection
-    );
+    print("🔄 Fetching all vehicles...");
 
-    print("📄 All Vehicles Response: ${response.documents}");
+    try {
+      final response = await _databases.listDocuments(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId, // Vehicles collection
+      );
 
-    List<Map<String, dynamic>> fetchedVehicles = response.documents.map((doc) {
-      return {
-        'id': doc.$id,
-        'brand_name': doc.data['brand_name'],
-        'model_name': doc.data['model_name'],
-        'color_name': doc.data['color_name'],
-      };
-    }).toList();
+      print("📄 All Vehicles Response: ${response.documents}");
 
-    setState(() {
-      vehicles = fetchedVehicles;
-      isLoading = false;
-    });
+      List<Map<String, dynamic>> fetchedVehicles =
+          response.documents.map((doc) {
+        return {
+          'id': doc.$id,
+          'brand_name': doc.data['brand_name'],
+          'model_name': doc.data['model_name'],
+          'color_name': doc.data['color_name'],
+        };
+      }).toList();
 
-    print(" All Vehicles fetched: $vehicles");
-  } catch (e) {
-    print(" Error fetching vehicles: $e");
-    setState(() {
-      isLoading = false;
-    });
+      setState(() {
+        vehicles = fetchedVehicles;
+        isLoading = false;
+      });
+
+      print(" All Vehicles fetched: $vehicles");
+    } catch (e) {
+      print(" Error fetching vehicles: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
-}
-
 
   //  Fetch User ID and Profile Data
   Future<void> _fetchUserData() async {
@@ -287,38 +287,25 @@ class _AboutyouState extends State<Aboutyou> {
             },
           ),
           ListTile(
-            // leading: radioProvider.selectedIcon??
-            //      const Icon(Icons.add, color: Colors.blue) // Default icon
-            //     : Icon(chattinessIcons[_selectedChattiness] ?? Icons.chat,
-            //         color: Colors.grey), // Change dynamically
-            leading: Icon(
-              radioProvider.chattinessIcons == null
-                  ? Icons.add_circle_outline
-                  : radioProvider.selectedIcon ?? Icons.chat,
-              color: Colors.grey,
-            ), // Default icon
+            leading: Icon(radioProvider.selectedChattinessIcon ?? Icons.chat,
+                color: Colors.grey), // Change dynamically-
             title: Text(
               radioProvider.selectedOption ?? 'I love to chat',
               style: TextStyle(color: Colors.grey),
             ),
           ),
           ListTile(
-            leading: Icon(
-              radioProvider.musicIcons == null
-                  ? Icons.add_circle_outline
-                  : radioProvider.selectedIcon ?? Icons.music_note,
-              color: Colors.grey,
-            ), // Default
+            leading: Icon(radioProvider.selectedMusicIcon ?? Icons.music_note,
+                color: Colors.grey), // Change dynamically
             title: Text(
               radioProvider.selectedMusic ?? "I'll am depending on the mood",
               style: TextStyle(color: Colors.grey),
             ),
           ),
           ListTile(
-            leading: radioProvider.smokingIcons == null
-                ? const Icon(Icons.add, color: Colors.blue) // Default icon
-                : Icon(smokingIcons[_selectedSmoking] ?? Icons.chat,
-                    color: Colors.grey), // Change dynamically
+            leading: Icon(
+                radioProvider.selectedSmokingIcon ?? Icons.smoking_rooms,
+                color: Colors.grey), // Change dynamically
 
             title: Text(
               radioProvider.selectedSmoking ?? "No smoking, please",
@@ -326,11 +313,8 @@ class _AboutyouState extends State<Aboutyou> {
             ),
           ),
           ListTile(
-            leading: radioProvider.petIcons == null
-                ? const Icon(Icons.add, color: Colors.blue) // Default icon
-                : Icon(petIcons[_selectedPetOption] ?? Icons.chat,
-                    color: Colors.grey), // Change dynamically
-
+            leading: Icon(radioProvider.selectedPetIcon ?? Icons.pets,
+                color: Colors.grey), // Change dynamically
             title: Text(
               radioProvider.selectedPetOption ?? "Pets welcome.woof!",
               style: TextStyle(color: Colors.grey),
