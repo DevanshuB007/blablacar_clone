@@ -5,6 +5,8 @@ class Id extends StatefulWidget {
 
   @override
   State<Id> createState() => _IdState();
+
+  static unique() {}
 }
 
 class _IdState extends State<Id> {

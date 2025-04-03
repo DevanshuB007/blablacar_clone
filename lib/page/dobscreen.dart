@@ -1,7 +1,9 @@
 import 'package:blablacar/page/addressed.dart';
+import 'package:blablacar/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class Dobscreen extends StatefulWidget {
   const Dobscreen({super.key});
@@ -76,7 +78,7 @@ class _DobscreenState extends State<Dobscreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: TextFormField(
                   controller: _dobController,
-                  readOnly: false, // Allow manual input
+                  readOnly: false,
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
@@ -103,7 +105,7 @@ class _DobscreenState extends State<Dobscreen> {
                           color: Colors.grey.shade600),
                     ),
                   ),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.datetime,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9/]')),
                   ],
@@ -132,6 +134,9 @@ class _DobscreenState extends State<Dobscreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_formKey.currentState!.validate()) {
+            Provider.of<UserProvider>(context, listen: false)
+                .setUserData("dob", _dobController.text);
+
             // Navigate to next screen
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const Addressed()));

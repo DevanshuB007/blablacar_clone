@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/add_edit_car/vehicalpro.dart';
 
 class Carcolor extends StatefulWidget {
   const Carcolor({super.key});
@@ -8,153 +10,163 @@ class Carcolor extends StatefulWidget {
 }
 
 class _CarcolorState extends State<Carcolor> {
-  String? _selectedColor; // Tracks the selected color
+  String? _selectedColor;
+  bool _isSaving = false;
+  final String userId =
+      "your_user_id_here"; // Replace with actual user ID logic
+
   final List<Map<String, dynamic>> _colors = [
-    {"label": "black", "color": Colors.black, "value": "black"},
-    {"label": "white", "color": Colors.white, "value": "white"},
-    {"label": "Dark grey", "color": Colors.grey.shade700, "value": "Dark grey"},
-    {"label": "Grey", "color": Colors.grey, "value": "Grey"},
-    {"label": "claret", "color": Colors.redAccent.shade700, "value": "claret"},
-    {"label": "Red", "color": Colors.red, "value": "Red"},
-    {"label": "Dark blue", "color": Colors.blue.shade900, "value": "Dark blue"},
-    {"label": "Blue", "color": Colors.blue, "value": "Blue"},
-    {
-      "label": "Dark green",
-      "color": Colors.green.shade800,
-      "value": "Dark green"
-    },
-    {"label": "green", "color": Colors.green, "value": "green"},
-    {"label": "Brown", "color": Colors.brown, "value": "brown"},
-    {"label": "Orange", "color": Colors.orange, "value": "orange"},
-    {"label": "Yellow", "color": Colors.yellow, "value": "yellow"},
-    {"label": "purple", "color": Colors.purple, "value": "purple"},
-    {"label": "pink", "color": Colors.pink, "value": "pink"},
+    {"label": "Black", "color": Colors.black},
+    {"label": "White", "color": Colors.white},
+    {"label": "Dark Grey", "color": Colors.grey.shade700},
+    {"label": "Grey", "color": Colors.grey},
+    {"label": "Red", "color": Colors.red},
+    {"label": "Blue", "color": Colors.blue},
+    {"label": "Green", "color": Colors.green},
+    {"label": "Brown", "color": Colors.brown},
+    {"label": "Orange", "color": Colors.orange},
+    {"label": "Yellow", "color": Colors.yellow},
+    {"label": "Purple", "color": Colors.purple},
+    {"label": "Pink", "color": Colors.pink},
   ];
 
-  bool _isSaving = false; // For showing the loader on Save button
+  // Future<void> _saveColor() async {
+  //   try {
+  //     if (_selectedColor == null) return;
 
+  //     setState(() => _isSaving = true);
+
+  //     var provider = Provider.of<VehicleProvider>(context, listen: false);
+  //     provider.setColor(_selectedColor!);
+
+  //     print(
+  //         " Saving Data: Brand=${provider.selectedBrand}, Model=${provider.selectedModel}, Color=${provider.selectedColor}");
+
+  //     await provider.saveVehicleData();
+
+  //     setState(() => _isSaving = false);
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text('Vehicle data saved successfully!')),
+  //     );
+
+  //     Navigator.popUntil(context, (route) => route.isFirst);
+  //   } catch (e) {
+  //     print("Failed to save vehicle: $e");
+
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('Failed to save data: $e')),
+  //     );
+  //   }
+
+  //   setState(() => _isSaving = false);
+  // }
   Future<void> _saveColor() async {
-    setState(() {
-      _isSaving = true; // Show loader
-    });
+    if (_selectedColor == null) return;
 
-    // Simulate saving process
-    await Future.delayed(const Duration(seconds: 2));
+    setState(() => _isSaving = true);
 
-    setState(() {
-      _isSaving = false; // Hide loader
-    });
+    var provider = Provider.of<VehicleProvider>(context, listen: false);
+    provider.setColor(_selectedColor!);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Color $_selectedColor saved successfully!'),
-      ),
-    );
-  }
+    print(
+        " Saving Data: Brand=${provider.selectedBrand}, Model=${provider.selectedModel}, Color=${provider.selectedColor}");
 
-  Widget _buildColorOption({
-    required String label,
-    required Color color,
-    required String value,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedColor = value;
-        });
-      },
-      child: Row(
-        children: [
-          Radio<String>(
-            value: value,
-            groupValue: _selectedColor,
-            onChanged: (newValue) {
-              setState(() {
-                _selectedColor = newValue;
-              });
-            },
-            activeColor: color,
-          ),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ),
-          Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.rectangle,
-              border: Border.all(
-                color: Colors.black54,
-                width: 1.0,
-              ),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-          ),
-        ],
-      ),
-    );
+    //  Fetch user ID before saving
+    String? userId = await provider.getUserId();
+
+    if (userId == null) {
+      print(" Error: User not logged in.");
+      setState(() => _isSaving = false);
+      return;
+    }
+
+    //  Save data
+    await provider.saveVehicleData();
+
+    setState(() => _isSaving = false);
+
+    //  Show success message
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(content: Text(' Vehicle data saved successfully!')),
+    // );
+    //  Navigate back to the previous screen
+    Navigator.popUntil(context, (route) => route.isFirst);
+    // Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "What color is your vehicle?",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 20),
-              Column(
-                children: _colors.map((colorOption) {
-                  return _buildColorOption(
-                    label: colorOption["label"],
-                    color: colorOption["color"],
-                    value: colorOption["value"],
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 20),
-              if (_selectedColor != null)
-                Center(
-                  child: ElevatedButton(
-                    onPressed: _isSaving ? null : _saveColor,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 50,
-                        vertical: 15,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "What color is your vehicle?",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _colors.length,
+                itemBuilder: (context, index) {
+                  final colorOption = _colors[index];
+                  final label = colorOption["label"];
+                  final color = colorOption["color"];
+
+                  return ListTile(
+                    leading: Radio<String>(
+                      value: label,
+                      groupValue: _selectedColor,
+                      onChanged: (newValue) {
+                        setState(() => _selectedColor = newValue);
+                      },
+                      activeColor: color,
+                    ),
+                    title: Text(label, style: const TextStyle(fontSize: 16)),
+                    trailing: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Colors.black54, width: 1),
                       ),
                     ),
-                    child: _isSaving
-                        ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          )
-                        : const Text(
-                            'Save',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                            ),
-                          ),
+                    onTap: () => setState(() => _selectedColor = label),
+                  );
+                },
+              ),
+            ),
+            if (_selectedColor != null)
+              Center(
+                child: ElevatedButton(
+                  onPressed: _isSaving ? null : _saveColor,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 50,
+                      vertical: 15,
+                    ),
                   ),
+                  child: _isSaving
+                      ? const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.white),
+                        )
+                      : const Text(
+                          'Save',
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
                 ),
-              const SizedBox(height: 20),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

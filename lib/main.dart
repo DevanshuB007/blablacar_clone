@@ -1,17 +1,38 @@
+import 'package:appwrite/appwrite.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/add_edit_car/vehicalpro.dart';
+import 'package:blablacar/appwrite/app/data/config/auth_config.dart';
+import 'package:blablacar/appwrite/app/data/provider/radio_provider.dart';
+import 'package:blablacar/provider/user_provider.dart';
 import 'package:blablacar/screen/homepage.dart';
 import 'package:blablacar/screen/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarIconBrightness: Brightness.dark,
-      statusBarColor: Colors.white,
-      statusBarBrightness: Brightness.dark,
+      statusBarColor: Colors.transparent,
+      // statusBarBrightness: Brightness.dark,
     ),
   );
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  Client client = Client()
+      .setEndpoint(AuthConfig.endpoint)
+      .setProject(AuthConfig.projectId);
+  Account account = Account(client);
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => VehicleProvider()),
+        ChangeNotifierProvider(create: (context) => RadioProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,15 +42,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0fa6e3)),
         useMaterial3: true,
       ),
-      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      // home: const Splashscreen(),
-      home: Myhomepage(),
+      // home: const MyHomePage(title: 'Flutter Demo Home Pa
+      // ge'),
+      home: const Splashscreen(),
+      // home: Myhomepage(),
     );
   }
 }

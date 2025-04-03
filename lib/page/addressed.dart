@@ -50,8 +50,8 @@ class _AddressedState extends State<Addressed> {
                         'Miss/Madam',
                         style: TextStyle(fontSize: 16),
                       ),
-                      trailing:
-                          const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                      trailing: const Icon(Icons.arrow_forward_ios,
+                          color: Colors.grey),
                       onTap: () {
                         // Email sign up action
                         Navigator.push(
@@ -69,8 +69,8 @@ class _AddressedState extends State<Addressed> {
                         'sir',
                         style: TextStyle(fontSize: 16),
                       ),
-                      trailing:
-                          const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                      trailing: const Icon(Icons.arrow_forward_ios,
+                          color: Colors.grey),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -87,8 +87,8 @@ class _AddressedState extends State<Addressed> {
                         "i'd rather not say",
                         style: TextStyle(fontSize: 16),
                       ),
-                      trailing:
-                          const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                      trailing: const Icon(Icons.arrow_forward_ios,
+                          color: Colors.grey),
                       onTap: () {
                         Navigator.push(
                             context,

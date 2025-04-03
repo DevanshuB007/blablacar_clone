@@ -70,8 +70,10 @@ class _RegistrationState extends State<Registration> {
                   height: 55,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const Signup()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Signup()));
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00b2fc),
@@ -79,7 +81,7 @@ class _RegistrationState extends State<Registration> {
                           borderRadius: BorderRadius.circular(30),
                         )),
                     child: const Text(
-                      'Sign Up',
+                      'Sign Up',  
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

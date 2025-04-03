@@ -1,5 +1,7 @@
-import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/addvehicle/carcolor.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/add_edit_car/vehicalpro.dart';
 import 'package:flutter/material.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/addvehicle/carcolor.dart';
+import 'package:provider/provider.dart';
 
 class Ford extends StatefulWidget {
   const Ford({super.key});
@@ -10,19 +12,25 @@ class Ford extends StatefulWidget {
 
 class _FordState extends State<Ford> {
   final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
+
+  // Honda car models
+  final List<String> hondaModels = [
+    "Endover",
+    "Fortuner",
+    "FIESTA",
+    "Figo",
+    "Ecosport",
+    "Mustang",
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous screen
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.blue,
-          ),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back, color: Colors.blue),
         ),
       ),
       body: Padding(
@@ -32,22 +40,20 @@ class _FordState extends State<Ford> {
           children: [
             const Text(
               "What's your vehicle's \nmodel?",
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w500,
-              ),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 30),
-            // Search Box
+
+            // 🔍 Search Bar
             TextField(
               controller: _searchController,
               onChanged: (value) {
                 setState(() {
-                  // _searchQuery = value; // Update the search query
+                  _searchQuery = value.toLowerCase();
                 });
               },
               decoration: InputDecoration(
-                hintText: "Mini",
+                hintText: "Search model",
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.grey.shade200,
@@ -58,64 +64,38 @@ class _FordState extends State<Ford> {
               ),
             ),
             const SizedBox(height: 10),
-            ListTile(
-              title: Text('C-MAX'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Carcolor()));
-              },
+
+            // 📌 Honda Model List
+            Expanded(
+              child: ListView.separated(
+                itemCount: hondaModels.length,
+                separatorBuilder: (context, index) => const Divider(indent: 10),
+                itemBuilder: (context, index) {
+                  final model = hondaModels[index];
+
+                  // 🔍 Filter based on search query
+                  if (_searchQuery.isNotEmpty &&
+                      !model.toLowerCase().contains(_searchQuery)) {
+                    return const SizedBox.shrink(); // Hide unmatched models
+                  }
+
+                  return ListTile(
+                    title: Text(model),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                    onTap: () {
+                      var provider =
+                          Provider.of<VehicleProvider>(context, listen: false);
+                      provider.setModel(model); // Set selected model
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const Carcolor()),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-            Divider(
-              indent: 10,
-            ),
-            ListTile(
-              title: Text('FIESTA'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Carcolor()));
-              },
-            ),
-            Divider(
-              indent: 10,
-            ),
-            ListTile(
-              title: Text('FOCUS'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Carcolor()));
-              },
-            ),
-            Divider(
-              indent: 10,
-            ),
-            ListTile(
-              title: Text('MONDEO'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Carcolor()));
-              },
-            ),
-            Divider(
-              indent: 10,
-            ),
-            ListTile(
-              title: Text('100'),
-              trailing: Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Carcolor()));
-              },
-            ),
-            // Display current search query (optional)
-            // if (_searchQuery.isNotEmpty)
-            //   Text(
-            //     'Searching for: $_searchQuery',
-            //     style: const TextStyle(fontSize: 16, color: Colors.grey),
-            //   ),
           ],
         ),
       ),

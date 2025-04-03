@@ -1,8 +1,11 @@
-import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/edit%20travel%20pref/chattiness.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/edit%20travel%20pref/chattiness.dart'
+    as chattiness_pref;
 import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/edit%20travel%20pref/music.dart';
 import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/edit%20travel%20pref/pets.dart';
 import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/edit%20travel%20pref/smoking.dart';
+import 'package:blablacar/appwrite/app/data/provider/radio_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Edittravelpref extends StatefulWidget {
   const Edittravelpref({super.key});
@@ -12,8 +15,16 @@ class Edittravelpref extends StatefulWidget {
 }
 
 class _EdittravelprefState extends State<Edittravelpref> {
+  String _selectedChattiness = "I love to chat"; // Default value
+  String _selectedMusic = "I'll am depending on the mood"; // Default value
+  String _selectedSmoking = "No smoking, please"; // Default value
+  String _selectedPetOption =
+      "I'll travel with pets depending on the animal"; // Default value
+
   @override
   Widget build(BuildContext context) {
+    final radioProvider = Provider.of<RadioProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -47,15 +58,24 @@ class _EdittravelprefState extends State<Edittravelpref> {
                     fontSize: 15),
               ),
               subtitle: Text(
-                'i love to chat',
+                radioProvider.selectedOption ?? 'I love to chat',
+                // 'i love to chat',
                 style: TextStyle(
                     color: Colors.blue.shade600,
                     fontWeight: FontWeight.w500,
                     fontSize: 16),
               ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Chattiness()));
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const chattiness_pref.Chattiness()),
+                );
+                if (result != null) {
+                  setState(() {
+                    _selectedChattiness = result;
+                  });
+                }
               },
             ),
             ListTile(
@@ -67,15 +87,24 @@ class _EdittravelprefState extends State<Edittravelpref> {
                     fontSize: 15),
               ),
               subtitle: Text(
-                "i'll am depending on the mood",
+                radioProvider.selectedMusic ?? "i'll am depending on the mood",
+                // "i'll am depending on the mood",
                 style: TextStyle(
                     color: Colors.blue.shade600,
                     fontWeight: FontWeight.w500,
                     fontSize: 16),
               ),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Music()));
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Music()),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _selectedMusic = result;
+                  });
+                }
               },
             ),
             ListTile(
@@ -87,15 +116,24 @@ class _EdittravelprefState extends State<Edittravelpref> {
                     fontSize: 15),
               ),
               subtitle: Text(
-                'Cigarette breaks outside the car aree okk',
+                _selectedSmoking,
+                // 'Cigarette breaks outside the car aree okk',
                 style: TextStyle(
                     color: Colors.blue.shade600,
                     fontWeight: FontWeight.w500,
                     fontSize: 16),
               ),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Smoking()));
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Smoking()),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _selectedSmoking = result;
+                  });
+                }
               },
             ),
             ListTile(
@@ -107,15 +145,24 @@ class _EdittravelprefState extends State<Edittravelpref> {
                     fontSize: 15),
               ),
               subtitle: Text(
-                "i'll travle with pets depending onn the animal",
+                _selectedPetOption,
+                // "i'll travle with pets depending onn the animal",
                 style: TextStyle(
                     color: Colors.blue.shade600,
                     fontWeight: FontWeight.w500,
                     fontSize: 16),
               ),
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Pets()));
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Pets()),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    _selectedPetOption = result;
+                  });
+                }
               },
             ),
           ],

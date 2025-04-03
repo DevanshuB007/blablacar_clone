@@ -1,4 +1,7 @@
+import 'package:blablacar/page/signup_page.dart';
+import 'package:blablacar/screen/loginpage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -48,14 +51,19 @@ class _LoginState extends State<Login> {
                     Container(
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.email_outlined, color: Colors.grey),
+                        leading: const Icon(Icons.email_outlined,
+                            color: Colors.grey),
                         title: const Text(
                           'Continue with email',
                           style: TextStyle(fontSize: 16),
                         ),
-                        trailing:
-                            const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                        trailing: const Icon(Icons.arrow_forward_ios,
+                            color: Colors.grey),
                         onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Loginpage()));
                           // Email sign up action
                         },
                       ),
@@ -72,8 +80,8 @@ class _LoginState extends State<Login> {
                           'Continue with Facebook',
                           style: TextStyle(fontSize: 16),
                         ),
-                        trailing:
-                            const Icon(Icons.arrow_forward_ios, color: Colors.grey),
+                        trailing: const Icon(Icons.arrow_forward_ios,
+                            color: Colors.grey),
                         onTap: () {},
                       ),
                     ),
@@ -93,7 +101,8 @@ class _LoginState extends State<Login> {
             ),
             TextButton(
               onPressed: () {
-                // Login action
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => SignupPage()));
               },
               child: const Text(
                 'Sign Up',
