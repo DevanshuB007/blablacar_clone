@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Editcar extends StatefulWidget {
-  const Editcar({super.key});
+  final String carId;
+
+  const Editcar({super.key, required this.carId});
 
   @override
   State<Editcar> createState() => _EditcarState();
@@ -12,8 +14,17 @@ class Editcar extends StatefulWidget {
 
 class _EditcarState extends State<Editcar> {
   @override
+  void initState() {
+    super.initState();
+    final vehicleProvider =
+        Provider.of<VehicleProvider>(context, listen: false);
+    vehicleProvider.selectedCarId = widget.carId; // ✅ Set car ID for deletion
+  }
+
   Widget build(BuildContext context) {
     final vehicleProvider = Provider.of<VehicleProvider>(context);
+    final String? carId = vehicleProvider.selectedCarId;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -53,9 +64,17 @@ class _EditcarState extends State<Editcar> {
                 style: TextStyle(color: Colors.cyan),
               ),
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Deletecar()));
-                // Navigate to the edit screen
+                if (vehicleProvider.selectedCarId != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          Deletecar(carId: widget.carId), // ✅ Pass Car ID
+                    ),
+                  );
+                } else {
+                  print("❌ No car selected for deletion!");
+                }
               },
             ),
           ],

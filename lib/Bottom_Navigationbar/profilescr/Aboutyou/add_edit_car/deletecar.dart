@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:blablacar/Bottom_Navigationbar/profilescr/Aboutyou/add_edit_car/vehicalpro.dart';
 
 class Deletecar extends StatelessWidget {
-  const Deletecar({super.key});
+  final String carId; // Car ID to delete
+  const Deletecar({super.key, required this.carId});
 
   @override
   Widget build(BuildContext context) {
+    final vehicleProvider =
+        Provider.of<VehicleProvider>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.green[900],
       body: Padding(
@@ -39,10 +45,10 @@ class Deletecar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            //  Cancel Button
+            // ❌ Cancel Button
             IconButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(context); // Close dialog
               },
               icon: const Icon(Icons.close, color: Colors.white),
               style: IconButton.styleFrom(
@@ -54,20 +60,19 @@ class Deletecar extends StatelessWidget {
             // 🗑 Delete Button
             ElevatedButton(
               onPressed: () {
-                // Add delete logic here
+                final vehicleProvider =
+                    Provider.of<VehicleProvider>(context, listen: false);
+                vehicleProvider.deleteVehicle(context, carId);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
+                    borderRadius: BorderRadius.circular(30)),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
               ),
-              child: const Text(
-                "Delete vehicle",
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
+              child: const Text("Delete vehicle",
+                  style: TextStyle(fontSize: 18, color: Colors.white)),
             ),
           ],
         ),
