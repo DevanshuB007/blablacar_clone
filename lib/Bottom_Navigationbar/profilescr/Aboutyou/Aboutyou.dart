@@ -396,9 +396,13 @@ class _AboutyouState extends State<Aboutyou> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => Editcar(
-                                            carId: vehicle['id'],
-                                          )),
+                                    builder: (context) => Editcar(
+                                      carId: vehicle['id'],
+                                      // brand: vehicle['brand_name'],
+                                      // model: vehicle['model_name'],
+                                      // color: vehicle['color_name'],
+                                    ),
+                                  ),
                                 );
                               },
                             ),

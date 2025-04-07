@@ -156,12 +156,12 @@ class VehicleProvider extends ChangeNotifier {
       final session = await account.get();
       return session.$id;
     } catch (e) {
-      debugPrint("❌ Error fetching user ID: $e");
+      debugPrint(" Error fetching user ID: $e");
       return null;
     }
   }
 
-  // ✅ Setters for selected vehicle data
+  //  Setters for selected vehicle data
   void setCompany(String value) {
     _selectedBrand = value;
     notifyListeners();
@@ -182,12 +182,12 @@ class VehicleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ✅ Save new vehicle data to Appwrite
+  //  Save new vehicle data to Appwrite
   Future<void> saveVehicleData() async {
     String? userId = await getUserId(); // Fetch user ID
 
     if (userId == null) {
-      debugPrint("❌ Error: User not logged in.");
+      debugPrint(" Error: User not logged in.");
       return;
     }
 
@@ -195,7 +195,7 @@ class VehicleProvider extends ChangeNotifier {
         _selectedModel == null ||
         _selectedColor == null) {
       debugPrint(
-          "❌ Error: Missing data - Brand: $_selectedBrand, Model: $_selectedModel, Color: $_selectedColor");
+          " Error: Missing data - Brand: $_selectedBrand, Model: $_selectedModel, Color: $_selectedColor");
       return;
     }
 
@@ -212,16 +212,16 @@ class VehicleProvider extends ChangeNotifier {
         },
       );
 
-      debugPrint("✅ Vehicle data saved successfully!");
+      debugPrint(" Vehicle data saved successfully!");
     } catch (e) {
-      debugPrint("❌ Error saving vehicle data: $e");
+      debugPrint(" Error saving vehicle data: $e");
     }
   }
 
   // ✏️ Update existing vehicle data
   Future<void> updateVehicleData() async {
     if (selectedCarId == null) {
-      debugPrint("❌ Error: No vehicle selected.");
+      debugPrint(" Error: No vehicle selected.");
       return;
     }
 
@@ -237,17 +237,17 @@ class VehicleProvider extends ChangeNotifier {
         },
       );
 
-      debugPrint("✅ Vehicle updated successfully!");
+      debugPrint(" Vehicle updated successfully!");
       notifyListeners();
     } catch (e) {
-      debugPrint("❌ Error updating vehicle: $e");
+      debugPrint(" Error updating vehicle: $e");
     }
   }
 
   // 🗑 Delete selected vehicle
   Future<void> deleteVehicle(BuildContext context, String? carId) async {
     if (carId == null || carId.isEmpty) {
-      debugPrint("❌ No car ID provided for deletion!");
+      debugPrint(" No car ID provided for deletion!");
       return;
     }
 
@@ -258,16 +258,16 @@ class VehicleProvider extends ChangeNotifier {
         documentId: carId,
       );
 
-      // ✅ Clear selected car details
+      //  Clear selected car details
       _selectedBrand = null;
       _selectedModel = null;
       _selectedColor = null;
       selectedCarId = null;
 
       notifyListeners();
-      debugPrint("✅ Vehicle deleted successfully!");
+      debugPrint(" Vehicle deleted successfully!");
 
-      // ✅ Navigate to Home Screen after deletion
+      //  Navigate to Home Screen after deletion
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
@@ -276,7 +276,113 @@ class VehicleProvider extends ChangeNotifier {
         (route) => false,
       );
     } catch (e) {
-      debugPrint("❌ Error deleting vehicle: $e");
+      debugPrint(" Error deleting vehicle: $e");
+    }
+  }
+
+  // Get Single Car Details
+  Future<Map<String, dynamic>> getCarDetails(String carId) async {
+    try {
+      final response = await databases.getDocument(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId,
+        documentId: carId,
+      );
+
+      _selectedBrand = response.data['brand_name'];
+      _selectedModel = response.data['model_name'];
+      _selectedColor = response.data['color_name'];
+
+      return response.data;
+    } catch (e) {
+      print("❌ Error fetching car details: $e");
+      return {};
+    }
+  }
+
+// Update Car Details
+  Future<void> updateCarData({
+    required String carId,
+    required String brand,
+    required String model,
+    required String color,
+  }) async {
+    try {
+      await databases.updateDocument(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId,
+        documentId: carId,
+        data: {
+          'brand_name': brand,
+          'model_name': model,
+          'color_name': color,
+        },
+      );
+      print("✅ Vehicle updated successfully!");
+    } catch (e) {
+      print("❌ Error updating vehicle: $e");
+    }
+  }
+
+  Future<void> updateCarDetails({
+    required String carId,
+    required String brand,
+    required String color,
+  }) async {
+    try {
+      // Update Data in Appwrite DB
+      await databases.updateDocument(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId,
+        documentId: carId,
+        data: {
+          'model_name': _selectedModel,
+          'brand_name': brand,
+          'color': color,
+        },
+      );
+      _selectedBrand = brand;
+      _selectedColor = color;
+      notifyListeners();
+    } catch (e) {
+      print('Error updating car details: $e');
+    }
+  }
+
+  Future<void> fetchCarById(String carId) async {
+    try {
+      final response = await databases.getDocument(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId,
+        documentId: carId,
+      );
+      selectedCarId = response.data['id'] as String?;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching car: $e');
+    }
+  }
+
+  Future<void> updateVehicle({
+    required String carId,
+    required String brand,
+    required String model,
+    required String color,
+  }) async {
+    try {
+      await databases.updateDocument(
+        databaseId: AuthConfig.databaseId,
+        collectionId: AuthConfig.vehicalcollectionId,
+        documentId: carId,
+        data: {
+          'brand_name': brand,
+          'model_name': model,
+          'color_name': color,
+        },
+      );
+      print('Vehicle Updated');
+    } catch (e) {
+      print('Error updating vehicle: $e');
     }
   }
 }
